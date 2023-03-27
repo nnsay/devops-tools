@@ -1,9 +1,7 @@
 name: Release Tools
-
+run-name: "release tools ${{ github.ref }}"
 on:
- push:
-   tags:
-     - "v*.*.*"
+ workflow_dispatch
 
 jobs:
   release:
