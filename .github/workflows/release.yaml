@@ -28,6 +28,7 @@ jobs:
         with:
           artifacts: "bin/checksumfile,bin/darwin-amd64-aws-tools,bin/linux-amd64-aws-tools"
           bodyFile: "README.md"
+          token: ${{ secrets.DEVOPS_TOKEN }}
       # - name: Create Release
       #   id: create_release
       #   uses: actions/create-release@latest
