@@ -6,10 +6,12 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
+	"github.com/aws/aws-sdk-go-v2/service/iam/types"
 	"github.com/spf13/cobra"
 )
 
@@ -23,15 +25,23 @@ var deleteExpredCertificationCmd = &cobra.Command{
 		pathPrefix, _ := cmd.Flags().GetString("path-prefix")
 		fmt.Printf("experation time: %s \n", time.Unix(experationTime, 0).Format("2006-01-02 15:04:05"))
 		fmt.Printf("path prefix: %s \n", pathPrefix)
+
 		cfg, _ := config.LoadDefaultConfig(context.TODO())
 		client := iam.NewFromConfig(cfg)
+
 		output, _ := client.ListServerCertificates(context.TODO(), &iam.ListServerCertificatesInput{PathPrefix: &pathPrefix})
+		var wg sync.WaitGroup
 		for _, cert := range output.ServerCertificateMetadataList {
 			if cert.Expiration.Before(time.Unix(experationTime, 0)) {
-				fmt.Printf("the certification(%s) expired at %s\n", *cert.ServerCertificateName, (*cert.Expiration).Format("2006-01-02 15:04:05"))
-				client.DeleteServerCertificate(context.TODO(), &iam.DeleteServerCertificateInput{ServerCertificateName: cert.ServerCertificateName})
+				wg.Add(1)
+				go func(scm types.ServerCertificateMetadata) {
+					defer wg.Done()
+					fmt.Printf("the certification(%s) expired at %s\n", *scm.ServerCertificateName, (*scm.Expiration).Format("2006-01-02 15:04:05"))
+					client.DeleteServerCertificate(context.TODO(), &iam.DeleteServerCertificateInput{ServerCertificateName: scm.ServerCertificateName})
+				}(cert)
 			}
 		}
+		wg.Wait()
 		fmt.Println("deletion done!")
 	},
 }
