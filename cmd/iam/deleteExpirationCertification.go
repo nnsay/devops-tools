@@ -1,7 +1,7 @@
 /*
 Copyright © 2023 Jimmy Wang <jimmy.w@aliyun.com>
 */
-package cmd
+package iam
 
 import (
 	"context"
@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
+	"github.com/nnsay/aws-tools/lib"
 	"github.com/spf13/cobra"
 )
 
@@ -20,14 +20,13 @@ var deleteExpredCertificationCmd = &cobra.Command{
 	Use:     "delete-expired-certification",
 	Aliases: []string{"dec"},
 	Short:   "delete all expired server certification",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		experationTime, _ := cmd.Flags().GetInt64("expiration")
 		pathPrefix, _ := cmd.Flags().GetString("path-prefix")
 		fmt.Printf("experation time: %s \n", time.Unix(experationTime, 0).Format("2006-01-02 15:04:05"))
 		fmt.Printf("path prefix: %s \n", pathPrefix)
 
-		cfg, _ := config.LoadDefaultConfig(context.TODO())
-		client := iam.NewFromConfig(cfg)
+		client := lib.GetIamClient()
 
 		output, _ := client.ListServerCertificates(context.TODO(), &iam.ListServerCertificatesInput{PathPrefix: &pathPrefix})
 		var wg sync.WaitGroup
@@ -47,7 +46,7 @@ var deleteExpredCertificationCmd = &cobra.Command{
 }
 
 func init() {
-	iamCmd.AddCommand(deleteExpredCertificationCmd)
+	IamCmd.AddCommand(deleteExpredCertificationCmd)
 
 	deleteExpredCertificationCmd.Flags().Int64P("expiration", "e", time.Now().Unix(), "expiration unix time, default value is now")
 	deleteExpredCertificationCmd.Flags().StringP("path-prefix", "p", "/cloudfront/", "server certification path")

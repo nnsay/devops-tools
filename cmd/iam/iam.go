@@ -1,7 +1,7 @@
 /*
 Copyright © 2023 Jimmy Wang <jimmy.w@aliyun.com>
 */
-package cmd
+package iam
 
 import (
 	"fmt"
@@ -10,14 +10,10 @@ import (
 )
 
 // iamCmd represents the iam command
-var iamCmd = &cobra.Command{
+var IamCmd = &cobra.Command{
 	Use:   "iam",
 	Short: "tools related to iam",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("iam called")
+	Run: func(_ *cobra.Command, _ []string) {
+		fmt.Println("Please use the iam sub command")
 	},
-}
-
-func init() {
-	rootCmd.AddCommand(iamCmd)
 }
