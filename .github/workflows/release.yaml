@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    name: Build Tools
+    name: Publish Release
     runs-on: ubuntu-latest
     steps:
       - name: Check out git repository
