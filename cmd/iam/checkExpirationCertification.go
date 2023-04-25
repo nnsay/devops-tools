@@ -6,6 +6,7 @@ package iam
 import (
 	"context"
 	"fmt"
+	"os"
 	"sync"
 	"time"
 
@@ -37,8 +38,12 @@ var checkExpirationCertificationCmd = &cobra.Command{
 				wg.Add(1)
 				go func(scm types.ServerCertificateMetadata) {
 					defer wg.Done()
-					title := fmt.Sprintf("%s过期提醒", *scm.ServerCertificateName)
-					message := fmt.Sprintf("将在%s过期, 请及时更新", (*scm.Expiration).Format("2006-01-02 15:04:05"))
+					title := fmt.Sprintf(":rotating_light: %s 证书过期提醒 ", *scm.ServerCertificateName)
+					envName, found := os.LookupEnv("ENV_NAME")
+					if found {
+						title += fmt.Sprintf("(*%s*)", envName)
+					}
+					message := fmt.Sprintf(":hourglass_flowing_sand: 证书将在 %s 过期, 请及时处理!", (*scm.Expiration).Format("2006-01-02 15:04:05"))
 					lib.SendNotification(channel, title, message)
 				}(cert)
 

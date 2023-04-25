@@ -37,7 +37,7 @@ func SendNotification(channel string, title string, message string) {
 				Text: SlackBlockText{
 					Type: "mrkdwn",
 					// https://github.com/iamcal/emoji-data
-					Text: fmt.Sprintf(":sos: *%s*", title),
+					Text: title,
 				},
 			},
 			{
