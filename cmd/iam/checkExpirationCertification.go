@@ -38,7 +38,7 @@ var checkExpirationCertificationCmd = &cobra.Command{
 				wg.Add(1)
 				go func(scm types.ServerCertificateMetadata) {
 					defer wg.Done()
-					title := fmt.Sprintf(":rotating_light: %s 证书过期提醒 ", *scm.ServerCertificateName)
+					title := fmt.Sprintf(":rotating_light: _%s_ 证书过期提醒 ", *scm.ServerCertificateName)
 					envName, found := os.LookupEnv("ENV_NAME")
 					if found {
 						title += fmt.Sprintf("(*%s*)", envName)

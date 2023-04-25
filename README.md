@@ -40,7 +40,11 @@
   |expire-hours|e|剩余过期小时数| 72|
   |path-prefix|p|证书路径| /cloudfront/|
   |channel|c|Slack Channel| #devops|
-  |**SLACK_HOOK**|无|Slack webhook 地址**环境变量**| 无|
+  |**SLACK_HOOK**|无|必选, Slack webhook 地址**环境变量**| 无|
+  |**ENV_NAME**|无|可选, 如果有多个环境可以指定环境名称**环境变量**| 无|
+
+  提醒消息:
+  ![提醒消息](https://raw.githubusercontent.com/nnsay/gist/main/imgimgimage-20230425160005352.png)
 
 # AWS 权限
 
