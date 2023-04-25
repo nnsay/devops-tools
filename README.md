@@ -21,7 +21,7 @@
   |expiration|e|指定过期时间, 格式为时间戳| time.Now()|
   |path-prefix|p|证书路径| /cloudfront/|
 
-- 检查过期 IAM 证书
+- 检查临期 IAM 证书
 
   作用: 检查即将过期的证书并提醒, 提醒消息发送到 Slack(需配置 **SLACK_HOOK**)
 
@@ -29,9 +29,9 @@
 
   ```bash
   # use alias command
-  aws-tools iam cec
+  aws-tools iam ccd
   # use fullname command
-  aws-tools iam check-expired-certification
+  aws-tools iam check-certification-date
   ```
 
   参数说明:

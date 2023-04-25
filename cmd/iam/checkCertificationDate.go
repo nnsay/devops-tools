@@ -18,8 +18,8 @@ import (
 
 // checkExpirationCertificationCmd represents the checkExpirationCertification command
 var checkExpirationCertificationCmd = &cobra.Command{
-	Use:     "check-expired-certification",
-	Aliases: []string{"cec"},
+	Use:     "check-certification-date",
+	Aliases: []string{"ccd"},
 	Short:   "check the comming expiration certification",
 	Run: func(cmd *cobra.Command, _ []string) {
 		leftHours, _ := cmd.Flags().GetInt("expire-hours")
