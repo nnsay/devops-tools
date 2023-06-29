@@ -6,7 +6,7 @@ package cmd
 import (
 	"os"
 
-	"github.com/nnsay/aws-tools/cmd/cloudformation"
+	"github.com/nnsay/aws-tools/cmd/cloudforamtion"
 	"github.com/nnsay/aws-tools/cmd/iam"
 	"github.com/spf13/cobra"
 )
@@ -38,5 +38,5 @@ func init() {
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.AddCommand(iam.IamCmd)
-	rootCmd.AddCommand(cloudformation.CloudforamtionCmd)
+	rootCmd.AddCommand(cloudforamtion.CloudformationCmd)
 }
