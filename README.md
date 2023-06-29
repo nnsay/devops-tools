@@ -66,6 +66,7 @@
   |channel|c|Slack Channel| #devops|
   |**SLACK_HOOK**|无|必选, Slack webhook 地址**环境变量**| 无|
   |**ENV_NAME**|无|可选, 如果有多个环境可以指定环境名称**环境变量**| 无|
+  |**WHITE_STACK_NAMES**|无|可选, stack 白名单,多个以逗号分隔**环境变量**| 无|
 
   提醒消息:
   ![提醒消息](https://raw.githubusercontent.com/nnsay/gist/main/img20230629135941.png)
