@@ -50,6 +50,13 @@ var checkExpirationCloudformationCmd = &cobra.Command{
 		if emptyWhiteStackName {
 			fmt.Println("WHITE_STACK_NAMES is empty")
 		}
+		title := ":mag: Cloudformation提醒 "
+		envName, found := os.LookupEnv("ENV_NAME")
+		if found {
+			title += fmt.Sprintf("(%s)", envName)
+		}
+
+		messages := []interface{}{}
 		for _, summarie := range output.StackSummaries {
 			lastUpdatedTime := *summarie.LastUpdatedTime
 			description := *summarie.TemplateDescription
@@ -58,16 +65,22 @@ var checkExpirationCloudformationCmd = &cobra.Command{
 			if strings.Contains(whiteStackNames, name) || noChangeDays < days {
 				continue
 			}
-			title := ":mag: Cloudformation提醒 "
-			envName, found := os.LookupEnv("ENV_NAME")
-			if found {
-				title += fmt.Sprintf("(*%s*)", envName)
+			fields := []lib.SlackText{
+				{
+					Type: "mrkdwn",
+					Text: fmt.Sprintf("*名称*\n%s\n_%s_", name, lastUpdatedTime.Format("2006-01-02")),
+				},
+				{
+					Type: "mrkdwn",
+					Text: fmt.Sprintf("*描述*\n%s", description),
+				},
 			}
-			message := fmt.Sprintf("名称: _%s_ \n", name)
-			message += fmt.Sprintf("描述: _%s_ \n", description)
-			message += fmt.Sprintf("该资源自从 _%s_ 未更新, 请考虑处理!", lastUpdatedTime.Format("2006-01-02 15:04:05"))
-			lib.SendNotification(channel, title, message)
+			messages = append(messages, lib.SlackFieldBlock{
+				Type:   "section",
+				Fields: fields,
+			})
 		}
+		lib.SendNotification(channel, title, messages)
 	},
 }
 

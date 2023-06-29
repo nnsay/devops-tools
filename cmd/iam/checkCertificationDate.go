@@ -41,10 +41,18 @@ var checkExpirationCertificationCmd = &cobra.Command{
 					title := fmt.Sprintf(":rotating_light: _%s_ 证书过期提醒 ", *scm.ServerCertificateName)
 					envName, found := os.LookupEnv("ENV_NAME")
 					if found {
-						title += fmt.Sprintf("(*%s*)", envName)
+						title += fmt.Sprintf("(%s)", envName)
 					}
 					message := fmt.Sprintf(":hourglass_flowing_sand: 证书将在 %s 过期, 请及时处理!", (*scm.Expiration).Format("2006-01-02 15:04:05"))
-					lib.SendNotification(channel, title, message)
+					lib.SendNotification(channel, title, []interface{}{
+						lib.SlackTextBlock{
+							Type: "section",
+							Text: lib.SlackText{
+								Type: "mrkdwn",
+								Text: message,
+							},
+						},
+					})
 				}(cert)
 
 			}
