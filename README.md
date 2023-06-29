@@ -67,6 +67,9 @@
   |**SLACK_HOOK**|无|必选, Slack webhook 地址**环境变量**| 无|
   |**ENV_NAME**|无|可选, 如果有多个环境可以指定环境名称**环境变量**| 无|
 
+  提醒消息:
+  ![提醒消息](https://raw.githubusercontent.com/nnsay/gist/main/img20230629135941.png)
+
 # AWS 权限
 
 本工具引用了 aws sdk 所以权限上依赖 sdk 自己的设置, 根据文档支持: AWS\_\*环境变量和配置文件, 关于这块的配置请查看 AWS 文档: https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html
