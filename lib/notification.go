@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"time"
@@ -27,14 +28,48 @@ type SlackMessage struct {
 	Blocks  *[]SlackBlock `json:"blocks,omitempty"`
 }
 
+// https://api.slack.com/messaging/webhooks
 func doSendNotice(slackHook string, messageData []byte) {
-	// https://api.slack.com/messaging/webhooks
 	request, _ := http.NewRequest(http.MethodPost, slackHook, bytes.NewBuffer(messageData))
 	request.Header.Set("Content-Type", "application/json")
 	client := &http.Client{
 		Timeout: time.Second * 60,
 	}
-	client.Do(request)
+	response, err := client.Do(request)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	defer response.Body.Close()
+	b, _ := io.ReadAll(response.Body)
+	responseBody := string(b)
+	fmt.Println(responseBody)
+}
+
+// https://api.slack.com/methods/chat.postMessage
+func postMessage(messageData []byte) {
+
+	url := "https://slack.com/api/chat.postMessage"
+	slackToken, hasToken := os.LookupEnv("SLACK_TOKEN")
+	if !hasToken {
+		fmt.Println("SLACK_TOKEN not set")
+		return
+	}
+	request, _ := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(messageData))
+	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", slackToken))
+	client := &http.Client{
+		Timeout: time.Second * 60,
+	}
+	response, err := client.Do(request)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	defer response.Body.Close()
+	b, _ := io.ReadAll(response.Body)
+	responseBody := string(b)
+	fmt.Println(responseBody)
 }
 
 func SendNotification(channel string, title string, messages []SlackBlock) {
@@ -61,4 +96,5 @@ func SendNotification(channel string, title string, messages []SlackBlock) {
 	messageData, _ := json.Marshal(slackMessage)
 	fmt.Println("slack data: ", string(messageData))
 	doSendNotice(slackHook, messageData)
+	// postMessage(messageData)
 }
