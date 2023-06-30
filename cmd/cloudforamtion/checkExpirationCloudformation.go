@@ -56,7 +56,7 @@ var checkExpirationCloudformationCmd = &cobra.Command{
 			title += fmt.Sprintf("(%s)", envName)
 		}
 
-		messages := []interface{}{}
+		messages := []lib.SlackBlock{}
 		for _, summarie := range output.StackSummaries {
 			lastUpdatedTime := *summarie.LastUpdatedTime
 			description := *summarie.TemplateDescription
@@ -68,16 +68,16 @@ var checkExpirationCloudformationCmd = &cobra.Command{
 			fields := []lib.SlackText{
 				{
 					Type: "mrkdwn",
-					Text: fmt.Sprintf("*名称*\n%s\n_%s_", name, lastUpdatedTime.Format("2006-01-02")),
+					Text: fmt.Sprintf("*名称*\n%s\n_最后更新: %s_", name, lastUpdatedTime.Format("2006-01-02")),
 				},
 				{
 					Type: "mrkdwn",
 					Text: fmt.Sprintf("*描述*\n%s", description),
 				},
 			}
-			messages = append(messages, lib.SlackFieldBlock{
+			messages = append(messages, lib.SlackBlock{
 				Type:   "section",
-				Fields: fields,
+				Fields: &fields,
 			})
 		}
 		lib.SendNotification(channel, title, messages)

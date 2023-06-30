@@ -69,7 +69,7 @@
   |**WHITE_STACK_NAMES**|无|可选, stack 白名单,多个以逗号分隔**环境变量**| 无|
 
   提醒消息:
-  ![提醒消息](https://raw.githubusercontent.com/nnsay/gist/main/img20230629183017.png)
+  ![提醒消息](https://raw.githubusercontent.com/nnsay/gist/main/img20230630104222.png)
 
 # AWS 权限
 
