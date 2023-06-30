@@ -80,7 +80,9 @@ var checkExpirationCloudformationCmd = &cobra.Command{
 				Fields: &fields,
 			})
 		}
-		lib.SendNotification(channel, title, messages)
+		if len(messages) > 0 {
+			lib.SendNotification(channel, title, messages)
+		}
 	},
 }
 
