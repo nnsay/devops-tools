@@ -15,20 +15,16 @@ type SlackText struct {
 	Emoji bool   `json:"emoji,omitempty"`
 }
 
-type SlackTextBlock struct {
-	Type string    `json:"type"`
-	Text SlackText `json:"text,omitempty"`
-}
-
-type SlackFieldBlock struct {
-	Type   string      `json:"type"`
-	Fields []SlackText `json:"fields,omitempty"`
+type SlackBlock struct {
+	Type   string       `json:"type"`
+	Text   *SlackText   `json:"text,omitempty"`
+	Fields *[]SlackText `json:"fields,omitempty"`
 }
 
 type SlackMessage struct {
 	Channel string        `json:"channel"`
 	Text    string        `json:"text,omitempty"`
-	Blocks  []interface{} `json:"blocks"`
+	Blocks  *[]SlackBlock `json:"blocks,omitempty"`
 }
 
 func doSendNotice(slackHook string, messageData []byte) {
@@ -41,27 +37,28 @@ func doSendNotice(slackHook string, messageData []byte) {
 	client.Do(request)
 }
 
-func SendNotification(channel string, title string, messages []interface{}) {
+func SendNotification(channel string, title string, messages []SlackBlock) {
 	slackHook, _ := os.LookupEnv("SLACK_HOOK")
 	fmt.Printf("Stack hook url: %s\n", slackHook)
 
 	// https://api.slack.com/reference/surfaces/formatting
-	slackMessage := SlackMessage{
-		Channel: channel,
-		Blocks: []interface{}{
-			SlackTextBlock{
-				Type: "header",
-				Text: SlackText{
-					Type: "plain_text",
-					// https://github.com/iamcal/emoji-data
-					Text:  title,
-					Emoji: true,
-				},
+	blocks := []SlackBlock{
+		{
+			Type: "header",
+			Text: &SlackText{
+				Type: "plain_text",
+				Text: title,
+				// https://github.com/iamcal/emoji-data
+				Emoji: true,
 			},
 		},
 	}
-	slackMessage.Blocks = append(slackMessage.Blocks, messages...)
+	blocks = append(blocks, messages...)
+	slackMessage := SlackMessage{
+		Channel: channel,
+		Blocks:  &blocks,
+	}
 	messageData, _ := json.Marshal(slackMessage)
-	// fmt.Print(string(messageData))
+	fmt.Println("slack data: ", string(messageData))
 	doSendNotice(slackHook, messageData)
 }
