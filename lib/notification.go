@@ -29,31 +29,30 @@ type SlackMessage struct {
 }
 
 // https://api.slack.com/messaging/webhooks
-func doSendNotice(slackHook string, messageData []byte) {
-	request, _ := http.NewRequest(http.MethodPost, slackHook, bytes.NewBuffer(messageData))
-	request.Header.Set("Content-Type", "application/json")
-	client := &http.Client{
-		Timeout: time.Second * 60,
-	}
-	response, err := client.Do(request)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	defer response.Body.Close()
-	b, _ := io.ReadAll(response.Body)
-	responseBody := string(b)
-	fmt.Println(responseBody)
-}
+// func doSendNotice(slackHook string, messageData []byte) {
+// 	request, _ := http.NewRequest(http.MethodPost, slackHook, bytes.NewBuffer(messageData))
+// 	request.Header.Set("Content-Type", "application/json")
+// 	client := &http.Client{
+// 		Timeout: time.Second * 60,
+// 	}
+// 	response, err := client.Do(request)
+// 	if err != nil {
+// 		fmt.Println(err.Error())
+// 		return
+// 	}
+// 	defer response.Body.Close()
+// 	b, _ := io.ReadAll(response.Body)
+// 	responseBody := string(b)
+// 	fmt.Println(responseBody)
+// }
 
 // https://api.slack.com/methods/chat.postMessage
-func postMessage(messageData []byte) {
-
+func postMessage(messageData []byte) int {
 	url := "https://slack.com/api/chat.postMessage"
 	slackToken, hasToken := os.LookupEnv("SLACK_TOKEN")
 	if !hasToken {
 		fmt.Println("SLACK_TOKEN not set")
-		return
+		return -1
 	}
 	request, _ := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(messageData))
 	request.Header.Set("Content-Type", "application/json")
@@ -64,15 +63,18 @@ func postMessage(messageData []byte) {
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return response.StatusCode
 	}
 	defer response.Body.Close()
-	b, _ := io.ReadAll(response.Body)
-	responseBody := string(b)
-	fmt.Println(responseBody)
+	if response.StatusCode != http.StatusOK {
+		b, _ := io.ReadAll(response.Body)
+		responseBody := string(b)
+		fmt.Println(responseBody)
+	}
+	return response.StatusCode
 }
 
-func SendNotification(channel string, title string, messages []SlackBlock) {
+func SendNotification(channel string, title string, messages []SlackBlock) int {
 	slackHook, _ := os.LookupEnv("SLACK_HOOK")
 	fmt.Printf("Stack hook url: %s\n", slackHook)
 
@@ -95,6 +97,6 @@ func SendNotification(channel string, title string, messages []SlackBlock) {
 	}
 	messageData, _ := json.Marshal(slackMessage)
 	fmt.Println("slack data: ", string(messageData))
-	doSendNotice(slackHook, messageData)
-	// postMessage(messageData)
+	// doSendNotice(slackHook, messageData)
+	return postMessage(messageData)
 }
