@@ -40,7 +40,7 @@
   |expire-hours|e|剩余过期小时数| 72|
   |path-prefix|p|证书路径| /cloudfront/|
   |channel|c|Slack Channel| #devops|
-  |**SLACK_HOOK**|无|必选, Slack webhook 地址**环境变量**| 无|
+  |**SLACK_TOKEN**|无|必选, Slack 自定义应用 Auto Token 地址**环境变量**| 无|
   |**ENV_NAME**|无|可选, 如果有多个环境可以指定环境名称**环境变量**| 无|
 
   提醒消息:
@@ -64,13 +64,19 @@
   |---|---|---|---|
   |days|d|多少天未更新| 10 |
   |channel|c|Slack Channel| #devops|
-  |**SLACK_HOOK**|无|必选, Slack webhook 地址**环境变量**| 无|
+  |**SLACK_TOKEN**|无|必选, Slack 自定义应用 Auto Token 地址**环境变量**| 无|
   |**ENV_NAME**|无|可选, 如果有多个环境可以指定环境名称**环境变量**| 无|
   |**WHITE_STACK_NAMES**|无|可选, stack 白名单,多个以逗号分隔**环境变量**| 无|
 
   提醒消息:
   ![提醒消息](https://raw.githubusercontent.com/nnsay/gist/main/img20230630104222.png)
 
-# AWS 权限
+# 权限
 
-本工具引用了 aws sdk 所以权限上依赖 sdk 自己的设置, 根据文档支持: AWS\_\*环境变量和配置文件, 关于这块的配置请查看 AWS 文档: https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html
+- AWS
+
+  本工具引用了 aws sdk 所以权限上依赖 sdk 自己的设置, 根据文档支持: AWS\_\*环境变量和配置文件, 关于这块的配置请查看 AWS 文档: https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html
+
+- Slack
+
+  Slack 消息是通过安装自定义 Slack 应用, 然后利用该应用发送消息的途径, 而发消息需要`calls:write`权限, 详情参考 [Using the Calls API](https://api.slack.com/apis/calls); 之所以使用该种方式而不是[Incoming Webhooks](https://api.slack.com/apps/A052AEV2S68/incoming-webhooks)的原因是 webhook 不支持指定 Channel
