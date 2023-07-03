@@ -47,7 +47,7 @@ var checkExpirationCloudformationCmd = &cobra.Command{
 		})
 
 		whiteStackNames, emptyWhiteStackName := os.LookupEnv("WHITE_STACK_NAMES")
-		if emptyWhiteStackName {
+		if !emptyWhiteStackName {
 			fmt.Println("WHITE_STACK_NAMES is empty")
 		}
 		title := ":mag: Cloudformation提醒 "
