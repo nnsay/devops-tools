@@ -41,7 +41,7 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "bin/checksumfile,bin/darwin-amd64-aws-tools,bin/linux-amd64-aws-tools"
+          artifacts: "bin/checksumfile,bin/darwin-amd64-devops-tools,bin/linux-amd64-devops-tools"
           bodyFile: "releaselog.md"
           token: ${{ secrets.DEVOPS_TOKEN }}
       # - name: Create Release

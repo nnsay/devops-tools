@@ -2,4 +2,4 @@ bin/*
 !bin/.gitkeep
 .DS_Store
 
-aws-tools
+devops-tools

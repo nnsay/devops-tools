@@ -12,7 +12,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
-	"github.com/nnsay/aws-tools/lib"
+	"github.com/nnsay/devops-tools/lib"
 	"github.com/spf13/cobra"
 )
 

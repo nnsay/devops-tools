@@ -6,16 +6,17 @@ package cmd
 import (
 	"os"
 
-	"github.com/nnsay/aws-tools/cmd/cloudforamtion"
-	"github.com/nnsay/aws-tools/cmd/iam"
+	"github.com/nnsay/devops-tools/cmd/cloudforamtion"
+	"github.com/nnsay/devops-tools/cmd/iam"
+	"github.com/nnsay/devops-tools/cmd/monorepo"
 	"github.com/spf13/cobra"
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "aws-tools",
-	Short: "a tool collection for aws devops",
-	Long:  `a serial tools for usefual and common aws operation`,
+	Use:   "devops-tools",
+	Short: "a tool collection for devops",
+	Long:  `a serial tools for usefual and common devops operation`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -32,11 +33,12 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.aws-tools.yaml)")
+	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.devops-tools.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.AddCommand(iam.IamCmd)
 	rootCmd.AddCommand(cloudforamtion.CloudformationCmd)
+	rootCmd.AddCommand(monorepo.MonorepoCmd)
 }

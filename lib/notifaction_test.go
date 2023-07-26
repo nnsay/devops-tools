@@ -3,7 +3,7 @@ package lib_test
 import (
 	"testing"
 
-	"github.com/nnsay/aws-tools/lib"
+	"github.com/nnsay/devops-tools/lib"
 )
 
 func TestNotice(t *testing.T) {
