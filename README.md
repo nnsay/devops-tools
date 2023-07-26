@@ -31,10 +31,11 @@ devops-tools iam delete-expired-certification
 ```
 
 参数说明:
-|参数名称|别名|描述|默认值|
-|---|---|---|---|
-|expiration|e|指定过期时间, 格式为时间戳| time.Now()|
-|path-prefix|p|证书路径| /cloudfront/|
+
+| 参数名称    | 别名 | 描述                       | 默认值       |
+| ----------- | ---- | -------------------------- | ------------ |
+| expiration  | e    | 指定过期时间, 格式为时间戳 | time.Now()   |
+| path-prefix | p    | 证书路径                   | /cloudfront/ |
 
 ## 2.2 检查临期 IAM 证书
 
@@ -50,13 +51,14 @@ devops-tools iam check-certification-date
 ```
 
 参数说明:
-|参数名称|别名|描述|默认值|
-|---|---|---|---|
-|expire-hours|e|剩余过期小时数| 72|
-|path-prefix|p|证书路径| /cloudfront/|
-|channel|c|Slack Channel| #devops|
-|**SLACK_TOKEN**|无|必选, Slack 自定义应用 Auto Token 地址**环境变量**| 无|
-|**ENV_NAME**|无|可选, 如果有多个环境可以指定环境名称**环境变量**| 无|
+
+| 参数名称        | 别名 | 描述                                               | 默认值       |
+| --------------- | ---- | -------------------------------------------------- | ------------ |
+| expire-hours    | e    | 剩余过期小时数                                     | 72           |
+| path-prefix     | p    | 证书路径                                           | /cloudfront/ |
+| channel         | c    | Slack Channel                                      | #devops      |
+| **SLACK_TOKEN** | 无   | 必选, Slack 自定义应用 Auto Token 地址**环境变量** | 无           |
+| **ENV_NAME**    | 无   | 可选, 如果有多个环境可以指定环境名称**环境变量**   | 无           |
 
 提醒消息:
 ![提醒消息](https://raw.githubusercontent.com/nnsay/gist/main/img20230629183823.png)
@@ -75,13 +77,14 @@ devops-tools cloudformation checkExpirationCloudformation
 ```
 
 参数说明:
-|参数名称|别名|描述|默认值|
-|---|---|---|---|
-|days|d|多少天未更新| 10 |
-|channel|c|Slack Channel| #devops|
-|**SLACK_TOKEN**|无|必选, Slack 自定义应用 Auto Token 地址**环境变量**| 无|
-|**ENV_NAME**|无|可选, 如果有多个环境可以指定环境名称**环境变量**| 无|
-|**WHITE_STACK_NAMES**|无|可选, stack 白名单,多个以逗号分隔**环境变量**| 无|
+
+| 参数名称              | 别名 | 描述                                               | 默认值  |
+| --------------------- | ---- | -------------------------------------------------- | ------- |
+| days                  | d    | 多少天未更新                                       | 10      |
+| channel               | c    | Slack Channel                                      | #devops |
+| **SLACK_TOKEN**       | 无   | 必选, Slack 自定义应用 Auto Token 地址**环境变量** | 无      |
+| **ENV_NAME**          | 无   | 可选, 如果有多个环境可以指定环境名称**环境变量**   | 无      |
+| **WHITE_STACK_NAMES** | 无   | 可选, stack 白名单,多个以逗号分隔**环境变量**      | 无      |
 
 提醒消息:
 ![提醒消息](https://raw.githubusercontent.com/nnsay/gist/main/img20230630104222.png)
@@ -90,4 +93,34 @@ devops-tools cloudformation checkExpirationCloudformation
 
 Monorepo 基于[Nx](https://nx.dev/)的实践, 不过该类工具设计时与具体哪种 Monorepo 无关, 主要是解决 Monorepo 中的痛点问题.
 
-## 3.1 自定义代码覆盖率报告
+## 3.1 代码覆盖率报告
+
+依赖前提:
+
+测试覆盖率报告需要是`json-summary`格式, Istanbul 是事实上的代码测试覆盖率标准, 其支持产生的代码覆盖率报告格式有很多种, 常见的如 json, json-summary, text, lcov 等, 详情可以查看[这里](https://istanbul.js.org/docs/advanced/alternative-reporters/)
+
+作用:
+
+- 基于 Monorepo 的多项目的代码覆盖率报告, 覆盖率报告以项目分组
+- 支持检测代码覆盖率阈值检查, 目前检查的是 statement 指标
+
+使用方法:
+
+```bash
+# use alias command
+devops-tools monorepo ccr
+# use fullname command
+devops-tools monorepo codeCoverageReport
+```
+
+参数说明:
+
+| 参数名称    | 别名 | 描述         | 默认值 |
+| ----------- | ---- | ------------ | ------ |
+| coverageDir | d    | 多少天未更新 | 10     |
+| limitTarget | l    | 多少天未更新 | 10     |
+| reportPath  | r    | 多少天未更新 | 10     |
+
+扩展使用:
+
+该工具可以结合 gh 一起使用, 可以在流水线中显示覆盖率报告或者让低覆盖流水任务失败, 这部分技巧可以参考: [3. 配合 Github Workflow 使用](https://nnsay.cn/2023/07/17/code-coverage/#3-%E9%85%8D%E5%90%88-Github-Workflow-%E4%BD%BF%E7%94%A8)
