@@ -101,7 +101,7 @@ var codeCoverageReportCmd = &cobra.Command{
 				}
 			}
 		}
-		reportMarkdownFile, err := os.OpenFile(reportPath, os.O_CREATE|os.O_RDWR, 0666)
+		reportMarkdownFile, err := os.OpenFile(reportPath, os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0666)
 		if err != nil {
 			panic(err)
 		}
