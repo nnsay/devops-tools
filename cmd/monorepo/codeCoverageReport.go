@@ -43,7 +43,7 @@ type ReportSummary struct {
 	Total struct {
 		Lines      ReportItemType `json:"lines"`
 		Statements ReportItemType `json:"statements"`
-		Functions  ReportItemType `json:"functions'`
+		Functions  ReportItemType `json:"functions"`
 		Branches   ReportItemType `json:"branches"`
 	} `json:"total"`
 }
@@ -58,11 +58,13 @@ var codeCoverageReportCmd = &cobra.Command{
 		reportPath, _ := cmd.Flags().GetString("reportPath")
 		limitTarget, _ := cmd.Flags().GetInt("limitTarget")
 		exitFilePath := fmt.Sprintf("%s.exit", reportPath)
+		ignoreProjects, _ := cmd.Flags().GetString("ignoreProjects")
 
 		fmt.Printf("coverageDir: %v\n", coverageDirs)
 		fmt.Printf("reportPath: %s\n", reportPath)
 		fmt.Printf("exitFilePath: %s\n", exitFilePath)
 		fmt.Printf("limitTarget: %d\n", limitTarget)
+		fmt.Printf("ignoreProjects: %v\n", ignoreProjects)
 
 		var reportMarkdownString = []string{
 			"# Coverage report",
@@ -76,7 +78,11 @@ var codeCoverageReportCmd = &cobra.Command{
 				panic(err)
 			}
 			for _, dir := range dirs {
-				reportPath := fmt.Sprintf("%s/%s/coverage-summary.json", coverageDir, dir.Name())
+				projectName := dir.Name()
+				if strings.Contains(ignoreProjects, projectName) {
+					continue
+				}
+				reportPath := fmt.Sprintf("%s/%s/coverage-summary.json", coverageDir, projectName)
 				reportBytes, err := ioutil.ReadFile(reportPath)
 				if err != nil {
 					panic(err)
@@ -84,7 +90,7 @@ var codeCoverageReportCmd = &cobra.Command{
 				var reportSummary ReportSummary
 				json.Unmarshal(reportBytes, &reportSummary)
 				projectCoverage := fmt.Sprintf("|%s|%s|%s|%s|%s|",
-					dir.Name(),
+					projectName,
 					FormatCoverageValue(reportSummary.Total.Lines.Pct),
 					FormatCoverageValue(reportSummary.Total.Statements.Pct),
 					FormatCoverageValue(reportSummary.Total.Functions.Pct),
@@ -94,7 +100,7 @@ var codeCoverageReportCmd = &cobra.Command{
 				ptcFloat, isFloat64 := reportSummary.Total.Statements.Pct.(float64)
 				// ptcStr, isStr := reportSummary.Total.Statements.Pct.(string)
 				if isFloat64 && ptcFloat < float64(limitTarget) /*|| (isStr && ptcStr == "Unknown")*/ {
-					exitReasonMsg := fmt.Sprintf("%s statements coverage %v is lower than the limition target %d !\n", dir.Name(), reportSummary.Total.Statements.Pct, limitTarget)
+					exitReasonMsg := fmt.Sprintf("%s statements coverage %v is lower than the limition target %d !\n", projectName, reportSummary.Total.Statements.Pct, limitTarget)
 					exitFile, _ := os.OpenFile(exitFilePath, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
 					defer exitFile.Close()
 					exitFile.WriteString(exitReasonMsg)
@@ -116,4 +122,5 @@ func init() {
 	codeCoverageReportCmd.Flags().StringArrayP("coverageDir", "d", []string{"tmp/packages"}, "coverage report folder")
 	codeCoverageReportCmd.Flags().StringP("reportPath", "r", "tmp/report.md", "output code coverage report file path")
 	codeCoverageReportCmd.Flags().IntP("limitTarget", "l", -1, "failure if statements code coverage less than this limit target value")
+	codeCoverageReportCmd.Flags().StringP("ignoreProjects", "i", "", "ignore code coverage project(s)")
 }

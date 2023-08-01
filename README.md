@@ -115,11 +115,12 @@ devops-tools monorepo codeCoverageReport
 
 参数说明:
 
-| 参数名称    | 别名 | 描述         | 默认值 |
-| ----------- | ---- | ------------ | ------ |
-| coverageDir | d    | 多少天未更新 | 10     |
-| limitTarget | l    | 多少天未更新 | 10     |
-| reportPath  | r    | 多少天未更新 | 10     |
+| 参数名称       | 别名 | 描述                                                               | 默认值         |
+| -------------- | ---- | ------------------------------------------------------------------ | -------------- |
+| coverageDir    | d    | 覆盖率报告目录, 一般层级是: 覆盖率报告目录/应用目录/覆盖率报告文件 | {tmp/packages} |
+| limitTarget    | l    | statement 最低覆盖率阈值                                           | -1             |
+| reportPath     | r    | 自定义覆盖率报告产生位置                                           | tmp/report.md  |
+| ignoreProjects | i    | 需要忽略的项目, 多个的话使用逗号分隔                               | ""             |
 
 报告展示:
 
