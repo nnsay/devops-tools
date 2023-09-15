@@ -52,13 +52,14 @@ devops-tools iam check-certification-date
 
 参数说明:
 
-| 参数名称        | 别名 | 描述                                               | 默认值       |
-| --------------- | ---- | -------------------------------------------------- | ------------ |
-| expire-hours    | e    | 剩余过期小时数                                     | 72           |
-| path-prefix     | p    | 证书路径                                           | /cloudfront/ |
-| channel         | c    | Slack Channel                                      | #devops      |
-| **SLACK_TOKEN** | 无   | 必选, Slack 自定义应用 Auto Token 地址**环境变量** | 无           |
-| **ENV_NAME**    | 无   | 可选, 如果有多个环境可以指定环境名称**环境变量**   | 无           |
+| 参数名称        | 别名 | 描述                                               | 默认值         |
+| --------------- | ---- | -------------------------------------------------- | -------------- |
+| expire-hours    | e    | 剩余过期小时数                                     | 72             |
+| path-prefix     | p    | 证书路径                                           | /cloudfront/   |
+| channel         | c    | Slack Channel                                      | #devops        |
+| offset          | o    | timezone offset 秒数                               | 28800, +8 小时 |
+| **SLACK_TOKEN** | 无   | 必选, Slack 自定义应用 Auto Token 地址**环境变量** | 无             |
+| **ENV_NAME**    | 无   | 可选, 如果有多个环境可以指定环境名称**环境变量**   | 无             |
 
 提醒消息:
 ![提醒消息](https://raw.githubusercontent.com/nnsay/gist/main/img20230629183823.png)
@@ -78,13 +79,14 @@ devops-tools cloudformation checkExpirationCloudformation
 
 参数说明:
 
-| 参数名称              | 别名 | 描述                                               | 默认值  |
-| --------------------- | ---- | -------------------------------------------------- | ------- |
-| days                  | d    | 多少天未更新                                       | 10      |
-| channel               | c    | Slack Channel                                      | #devops |
-| **SLACK_TOKEN**       | 无   | 必选, Slack 自定义应用 Auto Token 地址**环境变量** | 无      |
-| **ENV_NAME**          | 无   | 可选, 如果有多个环境可以指定环境名称**环境变量**   | 无      |
-| **WHITE_STACK_NAMES** | 无   | 可选, stack 白名单,多个以逗号分隔**环境变量**      | 无      |
+| 参数名称              | 别名 | 描述                                               | 默认值         |
+| --------------------- | ---- | -------------------------------------------------- | -------------- |
+| days                  | d    | 多少天未更新                                       | 10             |
+| channel               | c    | Slack Channel                                      | #devops        |
+| offset                | o    | timezone offset 秒数                               | 28800, +8 小时 |
+| **SLACK_TOKEN**       | 无   | 必选, Slack 自定义应用 Auto Token 地址**环境变量** | 无             |
+| **ENV_NAME**          | 无   | 可选, 如果有多个环境可以指定环境名称**环境变量**   | 无             |
+| **WHITE_STACK_NAMES** | 无   | 可选, stack 白名单,多个以逗号分隔**环境变量**      | 无             |
 
 提醒消息:
 ![提醒消息](https://raw.githubusercontent.com/nnsay/gist/main/img20230630104222.png)

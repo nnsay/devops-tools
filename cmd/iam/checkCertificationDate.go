@@ -25,9 +25,13 @@ var checkExpirationCertificationCmd = &cobra.Command{
 		leftHours, _ := cmd.Flags().GetInt("expire-hours")
 		pathPrefix, _ := cmd.Flags().GetString("path-prefix")
 		channel, _ := cmd.Flags().GetString("channel")
+		offset, _ := cmd.Flags().GetInt("offset")
 		fmt.Printf("left hours: %d \n", leftHours)
 		fmt.Printf("path prefix: %s \n", pathPrefix)
 		fmt.Printf("channel: %s \n", channel)
+		fmt.Printf("offset seconds: %d \n", offset)
+
+		timezone := time.FixedZone("LocalZone", offset)
 
 		client := lib.GetIamClient()
 		output, _ := client.ListServerCertificates(context.TODO(), &iam.ListServerCertificatesInput{PathPrefix: &pathPrefix})
@@ -43,7 +47,7 @@ var checkExpirationCertificationCmd = &cobra.Command{
 					if found {
 						title += fmt.Sprintf("(%s)", envName)
 					}
-					message := fmt.Sprintf(":hourglass_flowing_sand: 证书将在 %s 过期, 请及时处理!", (*scm.Expiration).Format("2006-01-02 15:04:05"))
+					message := fmt.Sprintf(":hourglass_flowing_sand: 证书将在 %s 过期, 请及时处理!", (*scm.Expiration).In(timezone).Format("2006-01-02 15:04:05"))
 					lib.SendNotification(channel, title, []lib.SlackBlock{
 						{
 							Type: "section",
@@ -68,4 +72,5 @@ func init() {
 	checkExpirationCertificationCmd.Flags().IntP("expire-hours", "e", 72, "the left expiration hours of the certification, default value is 72")
 	checkExpirationCertificationCmd.Flags().StringP("path-prefix", "p", "/cloudfront/", "server certification path")
 	checkExpirationCertificationCmd.Flags().StringP("channel", "c", "#devops", "slack chanel")
+	checkExpirationCertificationCmd.Flags().IntP("offset", "o", 8*int(time.Hour.Seconds()), "timezone offset")
 }
