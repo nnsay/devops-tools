@@ -23,7 +23,7 @@ var deleteExpredCertificationCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, _ []string) {
 		experationTime, _ := cmd.Flags().GetInt64("expiration")
 		pathPrefix, _ := cmd.Flags().GetString("path-prefix")
-		fmt.Printf("experation time: %s \n", time.Unix(experationTime, 0).Format("2006-01-02 15:04:05"))
+		fmt.Printf("experation time: %s \n", time.Unix(experationTime, 0).In(time.Local).Format("2006-01-02 15:04:05"))
 		fmt.Printf("path prefix: %s \n", pathPrefix)
 
 		client := lib.GetIamClient()
@@ -35,7 +35,7 @@ var deleteExpredCertificationCmd = &cobra.Command{
 				wg.Add(1)
 				go func(scm types.ServerCertificateMetadata) {
 					defer wg.Done()
-					fmt.Printf("the certification(%s) expired at %s\n", *scm.ServerCertificateName, (*scm.Expiration).Format("2006-01-02 15:04:05"))
+					fmt.Printf("the certification(%s) expired at %s\n", *scm.ServerCertificateName, (*scm.Expiration).In(time.Local).Format("2006-01-02 15:04:05"))
 					client.DeleteServerCertificate(context.TODO(), &iam.DeleteServerCertificateInput{ServerCertificateName: scm.ServerCertificateName})
 				}(cert)
 			}

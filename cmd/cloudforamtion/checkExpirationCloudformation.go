@@ -24,12 +24,16 @@ var checkExpirationCloudformationCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		days, _ := cmd.Flags().GetInt("days")
 		channel, _ := cmd.Flags().GetString("channel")
-		offset, _ := cmd.Flags().GetInt("offset")
 		fmt.Printf("days: %d\n", days)
 		fmt.Printf("channel: %s\n", channel)
-		fmt.Printf("offset seconds: %d \n", offset)
 
-		timezone := time.FixedZone("LocalZone", offset)
+		// offset := 0
+		// offsetHours, isExist := os.LookupEnv("TIME_OFFSET_HOURS")
+		// if isExist {
+		// 	offset, _ = strconv.Atoi(offsetHours)
+		// }
+		// time.Local = time.FixedZone("zh-CN", offset*3600)
+		fmt.Printf("11 %#v", time.Local)
 
 		client := lib.GetCloudformationClient()
 		output, _ := client.ListStacks(context.TODO(), &cloudformation.ListStacksInput{
@@ -72,7 +76,7 @@ var checkExpirationCloudformationCmd = &cobra.Command{
 			fields := []lib.SlackText{
 				{
 					Type: "mrkdwn",
-					Text: fmt.Sprintf("*名称*\n%s\n_最后更新: %s_", name, lastUpdatedTime.In(timezone).Format("2006-01-02")),
+					Text: fmt.Sprintf("*名称*\n%s\n_最后更新: %s_", name, lastUpdatedTime.In(time.Local).Format("2006-01-02")),
 				},
 				{
 					Type: "mrkdwn",
